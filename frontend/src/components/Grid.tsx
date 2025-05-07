@@ -2,7 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 
 interface Rule {
-  condition: "equals" | "greater_than" | "recent" | "heatmap";
+  condition: "equals" | "greater_than" | "smaller_than" | "recent" | "heatmap";
   value?: any;
   style?: string;
   min?: number;
@@ -59,6 +59,9 @@ const Grid: React.FC<GridProps> = ({ columns, data }) => {
 
         if (rule.condition === "greater_than" && typeof val === "number") {
           if (val > rule.value) return rule.style ?? "bg-green-100";
+        }
+        if (rule.condition === "smaller_than" && typeof val === "number") {
+          if (val < rule.value) return rule.style ?? "bg-green-100";
         }
       }
     }

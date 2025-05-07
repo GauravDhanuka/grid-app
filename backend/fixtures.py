@@ -50,6 +50,11 @@ CONFIG_DATA_MAP = {
                         "condition": "greater_than",
                         "value": 85,
                         "style": "bg-green-100"
+                    },
+                    {
+                        "condition": "smaller_than",
+                        "value": 35,
+                        "style": "bg-red-100"
                     }
                 ]
             },
@@ -58,6 +63,7 @@ CONFIG_DATA_MAP = {
             {"Name": "John", "Score": 90},
             {"Name": "Doe", "Score": 75},
             {"Name": "Jane", "Score": 88},
+            {"Name": "Marry", "Score": 25},
         ]
     },
     "status": {
@@ -70,6 +76,11 @@ CONFIG_DATA_MAP = {
                         "condition": "equals",
                         "value": "Failed",
                         "style": "bg-red-100"
+                    },
+                    {
+                        "condition": "equals",
+                        "value": "Passed",
+                        "style": "bg-green-100"
                     }
                 ]
             },
