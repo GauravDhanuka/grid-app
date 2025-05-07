@@ -2,7 +2,13 @@ import React from "react";
 import dayjs from "dayjs";
 
 interface Rule {
-  condition: "equals" | "greater_than" | "smaller_than" | "recent" | "heatmap";
+  condition:
+    | "equals"
+    | "greater_than"
+    | "smaller_than"
+    | "recent"
+    | "heatmap"
+    | string;
   value?: any;
   style?: string;
   min?: number;

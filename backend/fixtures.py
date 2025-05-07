@@ -51,11 +51,11 @@ CONFIG_DATA_MAP = {
                         "value": 85,
                         "style": "bg-green-100"
                     },
-                    {
-                        "condition": "smaller_than",
-                        "value": 35,
-                        "style": "bg-red-100"
-                    }
+                    # {
+                    #     "condition": "smaller_than",
+                    #     "value": 35,
+                    #     "style": "bg-red-100"
+                    # }
                 ]
             },
         ],
@@ -77,11 +77,11 @@ CONFIG_DATA_MAP = {
                         "value": "Failed",
                         "style": "bg-red-100"
                     },
-                    {
-                        "condition": "equals",
-                        "value": "Passed",
-                        "style": "bg-green-100"
-                    }
+                    # {
+                    #     "condition": "equals",
+                    #     "value": "Passed",
+                    #     "style": "bg-green-100"
+                    # }
                 ]
             },
         ],
