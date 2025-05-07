@@ -121,23 +121,10 @@ npm start
 
 ---
 
-## 🧠 Notes & Improvements
+## 🧠 Notes
 
 - The current implementation is easily extendable to **schema-driven conditional rules** (e.g., dynamic condition/style logic)
 - The backend can support validation or rule-based transforms
 - Frontend can be made fully generic by interpreting rule sets from config (e.g., `equals`, `greater_than`, `recent`, etc.)
 
 ---
-
-## ✅ Future Ideas
-
-- ✏️ Admin UI to create/edit configs dynamically
-- 🌍 Internationalization (i18n) support
-- 🧪 Unit tests for rule evaluation
-- 🔄 Backend DB to persist custom configs
-
----
-
-## 📄 License
-
-MIT License — use freely, modify openly.
