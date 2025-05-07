@@ -1,7 +1,18 @@
 CONFIG_DATA_MAP = {
     "heatmap": {
         "columns": [
-            {"name": "Price", "heatmap": True},
+            {
+                "name": "Price",
+                "rules": [
+                    {
+                        "condition": "heatmap",
+                        "scale": "red-white",
+                        "style": "background-color",
+                        "min": 50,
+                        "max": 150
+                    }
+                ]
+            },
             {"name": "Date"}
         ],
         "data": [

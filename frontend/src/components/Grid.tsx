@@ -2,14 +2,16 @@ import React from "react";
 import dayjs from "dayjs";
 
 interface Rule {
-  condition: "equals" | "greater_than" | "recent" | string;
-  value: any;
-  style: string;
+  condition: "equals" | "greater_than" | "recent" | "heatmap";
+  value?: any;
+  style?: string;
+  min?: number;
+  max?: number;
+  scale?: string; // e.g. "red-white"
 }
 
 interface ColumnConfig {
   name: string;
-  heatmap?: boolean;
   rules?: Rule[];
 }
 
@@ -23,52 +25,62 @@ interface GridProps {
 }
 
 const Grid: React.FC<GridProps> = ({ columns, data }) => {
-  if (!columns) return null;
-
-  // Helper to check if a timestamp is < 24 hours old
   const isRecent = (dateStr: string) => {
     return dayjs().diff(dayjs(dateStr), "hour") < 24;
   };
 
-  // Helper to highlight rows based on timestamp
-  const shouldHighlight = (row: RowData) => {
+  const getHeatmapColor = (
+    value: number,
+    min: number,
+    max: number,
+    scale: string = "red-white"
+  ) => {
+    const percent = (value - min) / (max - min + 0.0001);
+    const intensity = Math.floor(percent * 255);
+    return scale === "red-white"
+      ? `rgb(255, ${255 - intensity}, ${255 - intensity})`
+      : `rgba(0, 0, 0, 0.1)`; // fallback
+  };
+
+  const getRowClass = (row: RowData): string => {
     for (const col of columns) {
-      const value = row[col.name];
+      const val = row[col.name];
       if (!col.rules) continue;
 
       for (const rule of col.rules) {
-        switch (rule.condition) {
-          case "equals":
-            if (value === rule.value) return rule.style;
-            break;
-          case "greater_than":
-            if (typeof value === "number" && value > rule.value)
-              return rule.style;
-            break;
-          case "recent":
-            if (typeof value === "string" && isRecent(value)) return rule.style;
-            break;
-          // more conditions in future
+        if (rule.condition === "recent" && typeof val === "string") {
+          if (isRecent(val)) return rule.style ?? "bg-yellow-100";
+          else return "bg-gray-100";
+        }
+
+        if (rule.condition === "equals" && val === rule.value) {
+          return rule.style ?? "bg-red-100";
+        }
+
+        if (rule.condition === "greater_than" && typeof val === "number") {
+          if (val > rule.value) return rule.style ?? "bg-green-100";
         }
       }
     }
+
     return "";
   };
 
-  // Compute heatmap values only once for each column
-  const heatmapValuesMap: Record<string, number[]> = {};
-  columns.forEach((col) => {
-    if (col.heatmap) {
-      heatmapValuesMap[col.name] = data.map((row) => row[col.name] as number);
-    }
-  });
+  const getCellStyle = (col: ColumnConfig, val: any): React.CSSProperties => {
+    if (!col.rules) return {};
 
-  const getColor = (value: number, allValues: number[]) => {
-    const min = Math.min(...allValues);
-    const max = Math.max(...allValues);
-    const percent = (value - min) / (max - min + 0.0001); // prevent /0
-    const intensity = Math.floor(percent * 255);
-    return `rgb(255, ${255 - intensity}, ${255 - intensity})`;
+    for (const rule of col.rules) {
+      if (rule.condition === "heatmap" && typeof val === "number") {
+        const min =
+          rule.min ?? Math.min(...data.map((d) => d[col.name] as number));
+        const max =
+          rule.max ?? Math.max(...data.map((d) => d[col.name] as number));
+        const bg = getHeatmapColor(val, min, max, rule.scale);
+        return { backgroundColor: bg };
+      }
+    }
+
+    return {};
   };
 
   return (
@@ -85,24 +97,17 @@ const Grid: React.FC<GridProps> = ({ columns, data }) => {
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className={shouldHighlight(row)}>
+            <tr key={rowIndex} className={getRowClass(row)}>
               {columns.map((col) => {
                 const val = row[col.name];
-                let style = {};
-
-                if (
-                  col.heatmap &&
-                  typeof val === "number" &&
-                  heatmapValuesMap[col.name]
-                ) {
-                  style = {
-                    backgroundColor: getColor(val, heatmapValuesMap[col.name]),
-                  };
-                }
-
+                const style = getCellStyle(col, val);
                 return (
                   <td key={col.name} className="border p-2" style={style}>
-                    {val}
+                    {val !== undefined ? (
+                      val
+                    ) : (
+                      <span className="text-gray-400 italic">N/A</span>
+                    )}
                   </td>
                 );
               })}
