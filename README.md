@@ -66,6 +66,8 @@ grid-app/
 ├── backend/
 │   ├── main.py                 # FastAPI app with /config and /data routes
 │   ├── fixtures.py             # Centralized grid config & sample data
+│   ├── tests/
+│   │   └── test_api.py         # Backend unit tests
 │   └── requirements.txt
 └── frontend/
     ├── src/
@@ -76,6 +78,7 @@ grid-app/
     │   │   └── Grid.tsx        # Generic configurable grid
     │   ├── App.tsx             # Entry component with tabs
     │   └── index.tsx
+    ├── App.test.tsx            # Frontend tests for App component
     └── tailwind.config.js
 ```
 
@@ -118,6 +121,33 @@ npm start
 | `/config?example=timestamp` | Config for recent-timestamp styling    |
 | `/config?example=score`     | Config for numeric threshold highlight |
 | `/config?example=status`    | Config for status match highlighting   |
+
+---
+
+## 📄 Running Tests
+
+### 🔢 Backend Tests (FastAPI + Pytest)
+
+```bash
+cd backend
+pytest tests
+```
+
+- Validates `/config` and `/data` routes
+- Checks for correct response shape and validation
+
+### 🔢 Frontend Tests (Jest + React Testing Library)
+
+```bash
+cd frontend
+npm test
+```
+
+- Tests rendering of each tab (heatmap, timestamp, score, status)
+- Mocks API calls with `jest.mock`
+- Asserts data rendering and tab behavior
+
+> Use `npm test -- --watchAll=false` for a one-time run.
 
 ---
 
