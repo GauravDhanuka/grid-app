@@ -76,6 +76,10 @@ grid-app/
     │   │   └── gridService.ts
     │   ├── components/
     │   │   └── Grid.tsx        # Generic configurable grid
+    │   ├── utils/
+    │   │   └── ruleUtils.ts    # Generic Rule Handler
+    │   ├── types/
+    │   │   └── gridTypes.ts    # Interfaces for Grid component
     │   ├── App.tsx             # Entry component with tabs
     │   └── index.tsx
     ├── App.test.tsx            # Frontend tests for App component

@@ -37,7 +37,7 @@ CONFIG_DATA_MAP = {
         "data": [
             {"Name": "Alice", "Date": "2025-05-06T14:00:00Z"},
             {"Name": "Bob", "Date": "2025-05-01T10:00:00Z"},
-            {"Name": "Charlie", "Date": "2025-05-07T08:30:00Z"},
+            {"Name": "Charlie", "Date": "2025-05-08T08:30:00Z"},
         ],
     },
     "score": {

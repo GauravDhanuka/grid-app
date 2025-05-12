@@ -1,77 +1,22 @@
 import React from "react";
 import dayjs from "dayjs";
 
-interface Rule {
-  condition:
-    | "equals"
-    | "greater_than"
-    | "smaller_than"
-    | "recent"
-    | "heatmap"
-    | string;
-  value?: any;
-  style?: string;
-  min?: number;
-  max?: number;
-  scale?: string; // e.g. "red-white"
-}
-
-interface ColumnConfig {
-  name: string;
-  rules?: Rule[];
-}
-
-interface RowData {
-  [key: string]: string | number;
-}
-
-interface GridProps {
-  columns: ColumnConfig[];
-  data: RowData[];
-}
+import { getHeatmapColor, ruleHandlers } from "../utils/ruleUtils";
+import { ColumnConfig, GridProps, RowData } from "../types/gridTypes";
 
 const Grid: React.FC<GridProps> = ({ columns, data }) => {
-  const isRecent = (dateStr: string) => {
-    return dayjs().diff(dayjs(dateStr), "hour") < 24;
-  };
-
-  const getHeatmapColor = (
-    value: number,
-    min: number,
-    max: number,
-    scale: string = "red-white"
-  ) => {
-    const percent = (value - min) / (max - min + 0.0001);
-    const intensity = Math.floor(percent * 255);
-    return scale === "red-white"
-      ? `rgb(255, ${255 - intensity}, ${255 - intensity})`
-      : `rgba(0, 0, 0, 0.1)`; // fallback
-  };
-
   const getRowClass = (row: RowData): string => {
     for (const col of columns) {
       const val = row[col.name];
       if (!col.rules) continue;
 
       for (const rule of col.rules) {
-        if (rule.condition === "recent" && typeof val === "string") {
-          if (isRecent(val)) return rule.style ?? "bg-yellow-100";
-          else return "bg-gray-100";
-        }
-
-        if (rule.condition === "equals" && val === rule.value) {
-          return rule.style ?? "bg-red-100";
-        }
-
-        if (rule.condition === "greater_than" && typeof val === "number") {
-          if (val > rule.value) return rule.style ?? "bg-green-100";
-        }
-        if (rule.condition === "smaller_than" && typeof val === "number") {
-          if (val < rule.value) return rule.style ?? "bg-green-100";
+        const handler = ruleHandlers[rule.condition];
+        if (handler && handler(rule, val)) {
+          return rule.style ?? "bg-gray-100";
         }
       }
     }
-
     return "";
   };
 
