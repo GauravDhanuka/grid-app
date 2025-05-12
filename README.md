@@ -159,6 +159,5 @@ npm test
 
 - The current implementation is easily extendable to **schema-driven conditional rules** (e.g., dynamic condition/style logic)
 - The backend can support validation or rule-based transforms
-- Frontend can be made fully generic by interpreting rule sets from config (e.g., `equals`, `greater_than`, `recent`, etc.)
 
 ---
